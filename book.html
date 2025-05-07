@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul PR - Story Book Writer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2310ef;
+            --secondary: #614B3A;
+            --accent: #df2929;
+            --background: #FFF8E8;
+            --text: #2D2926;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Merriweather', serif;
+        }
+
+        .book-cover-container {
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .book-cover {
+            height: 300px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s ease-in-out;
+            max-width: 100%;
+        }
+
+        .book-cover:hover {
+            transform: scale(1.05) rotate(1deg);
+        }
+        
+        /* Hide scrollbar but allow scrolling */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Ensure cards stack vertically on mobile */
+@media (max-width: 767px) {
+    .flex-col {
+        flex-direction: column;
+    }
+    .book-card {
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+    .max-h-[600px] {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+}
+
+/* Ensure two cards side by side on PC and tablet */
+@media (min-width: 768px) {
+    .book-card {
+        flex: 1;
+    }
+}
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .hero-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .section-heading {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .book-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: var(--accent);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--accent);
+        }
+
+        .contact-input {
+            border: 1px solid #D1D5DB;
+            transition: border-color 0.3s ease;
+        }
+
+        .contact-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.25);
+            outline: none;
+        }
+
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Mobile-specific fixes */
+        @media (max-width: 640px) {
+            .book-cover:hover {
+                transform: none;
+            }
+
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .fixed.bottom-6.right-6 {
+                right: 1rem;
+                bottom: 1rem;
+                padding: 0.75rem;
+            }
+
+            .hero-bg .container {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .hero-bg img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="fixed w-full bg-white bg-opacity-95 shadow-md z-50 py-4">
+        <div class="container mx-auto px-4 sm:px-6 flex items-center justify-between">
+            <div class="text-2xl font-bold text-primary">
+                <span style="color: var(--primary);">Rahul PR</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="nav-link text-gray-700 hover:text-primary transition">Home</a>
+                <a href="#books" class="nav-link text-gray-700 hover:text-primary transition">Books</a>
+                <a href="#upcoming" class="nav-link text-gray-700 hover:text-primary transition">Upcoming</a>
+                <a href="#about" class="nav-link text-gray-700 hover:text-primary transition">About</a>
+                <a href="#contact" class="nav-link text-gray-700 hover:text-primary transition">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="focus:outline-none">
+                    <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white p-4 absolute w-full shadow-md">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="text-gray-700 hover:text-primary transition">Home</a>
+                <a href="#books" class="text-gray-700 hover:text-primary transition">Books</a>
+                <a href="#upcoming" class="text-gray-700 hover:text-primary transition">Upcoming</a>
+                <a href="#about" class="text-gray-700 hover:text-primary transition">About</a>
+                <a href="#contact" class="text-gray-700 hover:text-primary transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center pt-16 overflow-x-hidden">
+        <div class="container mx-auto px-4 sm:px-6 py-24 md:py-32">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                    <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">Crafting Magical Stories for Young Minds</h1>
+                    <p class="text-xl text-white opacity-90 mb-8">Award-winning children's book author, bringing imagination to life through the pages of enchanting stories on Amazon KDP.</p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#books" class="btn-primary px-8 py-3 rounded-lg font-medium text-center">Explore Books</a>
+                        <a href="#contact" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-primary transition text-center">Get in Touch</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="relative">
+                        <div class="absolute -inset-1 bg-white opacity-20 rounded-full blur"></div>
+                        <img src="logo.jpg" alt="Rahul PR" class="relative rounded-full h-64 w-64 md:h-80 md:w-80 object-cover">
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-20">
+                <div class="scroll-indicator text-white">
+                    <i class="fas fa-chevron-down text-3xl"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+      <!-- Featured Book -->
+<section class="py-20 bg-white overflow-x-hidden">
+    <div class="container mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12" data-aos="fade-up" data-aos-duration="1000">
+            <h2 class="section-heading text-3xl md:text-4xl font-bold mb-6">Featured Books</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Discover Rahul PR's handpicked selection of captivating stories that ignite imagination and inspire readers of all ages.</p>
+        </div>
+        <div class="flex flex-col md:flex-row md:space-x-8 overflow-y-auto max-h-[600px] md:max-h-none scrollbar-hide" data-aos="fade-up" data-aos-duration="1000">
+            <!-- Card 1 -->
+            <div class="book-card mb-8 md:mb-0 md:w-1/2 flex-shrink-0 bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-right" data-aos-duration="1000">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 p-6">
+                        <div class="book-cover-container mx-auto">
+                            <img src="https://m.media-amazon.com/images/I/61qadYp9JXL._UF1000,1000_QL80_FMwebp_.jpg" alt="The Legend of Vanchi" class="book-cover rounded-lg">
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 p-6">
+                        <div class="text-sm font-semibold text-accent mb-2" style="color: var(--accent);">FEATURED TITLE</div>
+                        <h2 class="text-2xl md:text-3xl font-bold mb-4">The Legend of Vanchi: The Cursed Rebel</h2>
+                        <div class="flex items-center mb-4">
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star-half-alt text-yellow-400"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">4.8 (30 reviews)</span>
+                        </div>
+                        <p class="text-gray-700 mb-6">In the heart of colonial Travancore, a cursed rebel named Vanchi rises to fight oppression with the power of a dark goddess. His legacy, sealed by blood and loss, passes to young Ravi, who answers the call of the same enchanted blade. Together, their fates entwine in a cycle of vengeance, sacrifice, and hope.</p>
+                        <div class="mb-6">
+                            <span class="text-xl font-bold" style="color: var(--primary);">$4.00</span>
+                            <span class="text-sm text-gray-500 line-through ml-2">$5.00</span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="https://a.co/d/2YXkWc4" target="_blank" class="btn-primary px-8 py-3 rounded-lg font-medium flex items-center justify-center">
+                                <i class="fab fa-amazon mr-2"></i> Buy on Amazon
+                            </a>
+                            <a href="https://read.amazon.com/sample/B0F2JGF1JC?f=1&l=en_US&r=b85ff670&rid=QT76SNMGHVV25RHQ1GXB&sid=146-6863024-7477762&cid=A27HNTXC6IQJNX&ref_=litb_m" target="_blank" class="bg-gray-100 text-gray-800 px-8 py-3 rounded-lg font-medium hover:bg-gray-200 transition flex items-center justify-center">
+                                <i class="fas fa-book-open mr-2"></i> Read Sample
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="book-card mb-8 md:mb-0 md:w-1/2 flex-shrink-0 bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-left" data-aos-duration="1000">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 p-6">
+                        <div class="book-cover-container mx-auto">
+                            <img src="https://f.media-amazon.com/images/I/91mnua3lrZL._SL1500_.jpg" alt="Shadows Of The Mind" class="book-cover rounded-lg">
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 p-6">
+                        <div class="text-sm font-semibold text-accent mb-2" style="color: var(--accent);">FEATURED TITLE</div>
+                        <h2 class="text-2xl md:text-3xl font-bold mb-4">The Devil's Shadow: A Sister's Path to Redemption</h2>
+                        <div class="flex items-center mb-4">
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                            <span class="ml-2 text-gray-600">5.0 (25 reviews)</span>
+                        </div>
+                        <p class="text-gray-700 mb-6">A Haunting Tale of Sisterhood, Guilt, and the Power of LoveIn a small town where fireflies dance and secrets fester, Meera’s jealousy casts a shadow over her newborn sister, Tara. A single act of rage a crimson word scrawled on a photograph marks the beginning of a rift that haunts Meera’s heart. when a mysterious mark brands Tara as cursed, whispers of doom threaten to tear their family ...</p>
+                        <div class="mb-6">
+                            <span class="text-xl font-bold" style="color: var(--primary);">$5.00</span>
+                            <span class="text-sm text-gray-500 line-through ml-2">$5.60</span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="https://a.co/d/cEyFnZG" target="_blank" class="btn-primary px-8 py-3 rounded-lg font-medium flex items-center justify-center">
+                                <i class="fab fa-amazon mr-2"></i> Buy on Amazon
+                            </a>
+                            <a href="https://read.amazon.com/sample/B0DBYSX9VW?f=1&l=en_US&r=e1f933cb&rid=62FVP2MJ4JZJ4D7Q8X99&sid=146-6863024-7477762&cid=A27HNTXC6IQJNX&ref_=litb_m" target="_blank" class="bg-gray-100 text-gray-800 px-8 py-3 rounded-lg font-medium hover:bg-gray-200 transition flex items-center justify-center">
+                                <i class="fas fa-book-open mr-2"></i> Read Sample
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <!-- Published Books -->
+    <section id="books" class="py-20 bg-gray-50 overflow-x-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="section-heading text-3xl md:text-4xl font-bold mb-6">Published Books</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Explore Rahul PR's captivating collection of horror, history, action, fantasy, and love stories—tales that thrill, inspire, and ignite the imagination of readers of all ages.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Book 1 -->
+                <div class="book-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+                    <div class="p-6">
+                        <div class="book-cover-container flex justify-center mb-6">
+                            <img src="https://m.media-amazon.com/images/I/71s0SdUsOaL._SL1500_.jpg" alt="Book Cover" class="book-cover h-64 w-auto rounded">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Shadows Of The Mind: Psychological Horror Story</h3>
+                        <p class="text-gray-600 mb-4">Renowned psychiatrist Dr. Anya Petrova enters Voss Manor to confront a patient’s unseen terror. But as reality unravels, she discovers some fears aren’t just in the mind.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary" style="color: var(--primary);">$ 4.20</span>
+                            <a href="https://a.co/d/5Ylf1WV" target="_blank" class="btn-primary px-4 py-2 rounded font-medium text-sm"><i class="fab fa-amazon mr-2"></i>Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="book-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                    <div class="p-6">
+                        <div class="book-cover-container flex justify-center mb-6">
+                            <img src="https://m.media-amazon.com/images/I/61BIt1khqTL._UF894,1000_QL80_FMwebp_.jpg" alt="Book Cover" class="book-cover h-64 w-auto rounded">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">A Night in London: A Story of Love and Loss</h3>
+                        <p class="text-gray-600 mb-4">A missed train and a stolen wallet unite Emma and Oliver for one magical night in London. Between secrets and stolen kisses, a deep bond forms.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary" style="color: var(--primary);">$ 5.00</span>
+                            <a href="https://a.co/d/0rAXVJQ" target="_blank" class="btn-primary px-4 py-2 rounded font-medium text-sm"><i class="fab fa-amazon mr-2"></i>Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 3 -->
+                <div class="book-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                    <div class="p-6">
+                        <div class="book-cover-container flex justify-center mb-6">
+                            <img src="https://m.media-amazon.com/images/I/615kAyWBQ2L._UF894,1000_QL80_FMwebp_.jpg" alt="Book Cover" class="book-cover h-64 w-auto rounded">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">The Phoenix Crown: A Kingdom Reborn, A Darkness Unleashed</h3>
+                        <p class="text-gray-600 mb-4">After years of peace, a cryptic message from Kaelen warns of an ancient darkness awakening in the east. At the heart of the mystery lies the Phoenix Crown, a relic ...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary" style="color: var(--primary);">$ 4.00</span>
+                            <a href="https://a.co/d/hMIi7RV" target="_blank" class="btn-primary px-4 py-2 rounded font-medium text-sm"><i class="fab fa-amazon mr-2"></i>Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 4 -->
+                <div class="book-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                    <div class="p-6">
+                        <div class="book-cover-container flex justify-center mb-6">
+                            <img src="https://m.media-amazon.com/images/I/61u7SGk3UiL._UF1000,1000_QL80_FMwebp_.jpg" alt="Book Cover" class="book-cover h-64 w-auto rounded">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">The Code of Hearts: A Tale of Love, Betrayal, and Encrypted Secrets</h3>
+                        <p class="text-gray-600 mb-4">Ayaan, a brilliant hacker, crosses paths with Eleanor, a cryptography-loving princess hiding her identity. Their connection deepens through secrets and encrypted ...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary" style="color: var(--primary);">$ 5.00</span>
+                            <a href="https://a.co/d/4yg6LWs" target="_blank" class="btn-primary px-4 py-2 rounded font-medium text-sm"><i class="fab fa-amazon mr-2"></i>Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 5 -->
+                <div class="book-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                    <div class="p-6">
+                        <div class="book-cover-container flex justify-center mb-6">
+                            <img src="https://m.media-amazon.com/images/I/61jXm7LN4vL._AC_UF1000,1000_QL80_FMwebp_.jpg" alt="Book Cover" class="book-cover h-64 w-auto rounded">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Princess And Heart Of The Forest: Princess Aurelia and the Magic</h3>
+                        <p class="text-gray-600 mb-4">Princess Aurelia, a kind-hearted and brave young princess, embarks on a magical journey to save her kingdom from an endless ...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary" style="color: var(--primary);">$ 10.00</span>
+                            <a href="https://a.co/d/9J1Ok3J" target="_blank" class="btn-primary px-4 py-2 rounded font-medium text-sm"><i class="fab fa-amazon mr-2"></i>Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 6 -->
+                <div class="book-card" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                    <div class="p-6">
+                        <div class="book-cover-container flex justify-center mb-6">
+                            <img src="https://m.media-amazon.com/images/I/710YAjMjBGL._UF1000,1000_QL80_FMwebp_.jpg" alt="Book Cover" class="book-cover h-64 w-auto rounded">
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Cracking the Success Code: Rewire Your Mind, Habits</h3>
+                        <p class="text-gray-600 mb-4">Science-backed strategies to transform setbacks into breakthroughs. A 90-day action plan with habit trackers and worksheets to turn knowledge ...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary" style="color: var(--primary);">$ 5.00</span>
+                            <a href="https://a.co/d/1ias1Sn" target="_blank" class="btn-primary px-4 py-2 rounded font-medium text-sm"><i class="fab fa-amazon mr-2"></i>Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-16">
+                <a href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3ARahul%2BPR&s=relevancerank&text=Rahul+PR&ref=dp_byline_sr_book_1" target="_blank" class="inline-flex items-center text-primary font-semibold hover:underline" style="color: var(--primary);">
+                    View all books on Amazon <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Projects -->
+    <section id="upcoming" class="py-20 bg-white overflow-x-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="section-heading text-3xl md:text-4xl font-bold mb-6">Upcoming Projects</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Get a sneak peek at what Rahul PR is currently working on and be the first to know when new books are released.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Upcoming Book 1 -->
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="p-8">
+                        <div class="flex items-start">
+                            <div class="bg-accent text-white rounded-full p-3 mr-4" style="background-color: var(--accent);">
+                                <i class="fas fa-book text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Evil Sister: Psychological Drama</h3>
+                                <p class="text-gray-600 mb-4">"Evil Sister" tells the haunting story of two sisters torn by jealousy, pain, and ancient fears...</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-calendar-alt mr-2"></i>
+                                    <span>Expected Release: May 2025</span>
+                                </div>
+                                <div class="mt-6">
+                                    <a href="#" class="text-primary font-medium hover:underline" style="color: var(--primary);">Join waiting list</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Book 2 -->
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="p-8">
+                        <div class="flex items-start">
+                            <div class="bg-accent text-white rounded-full p-3 mr-4" style="background-color: var(--accent);">
+                                <i class="fas fa-book text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Dabble the Brave Little Duck</h3>
+                                <p class="text-gray-600 mb-4">duck—he had a tiny satchel, a walking stick, and dreams bigger than the pond he was born in...</p>
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <i class="far fa-calendar-alt mr-2"></i>
+                                    <span>Expected Release: May 2025</span>
+                                </div>
+                                <div class="mt-6">
+                                    <a href="#" class="text-primary font-medium hover:underline" style="color: var(--primary);">Join waiting list</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16" data-aos="fade-up" data-aos-duration="1000">
+                <h3 class="text-2xl font-bold mb-6">My Services</h3>
+                <div class="space-y-8">
+                    <div class="timeline-item pl-8">
+                        <h4 class="font-bold">Book Cover Design</h4>
+                        <p class="text-gray-600">Professional eBook and print cover designs that capture your story’s essence and attract readers. Custom-made to suit every genre.</p>
+                    </div>
+                    <div class="timeline-item pl-8">
+                        <h4 class="font-bold">Social Media Post & Mockup Creation</h4>
+                        <p class="text-gray-600">Eye-catching social media graphics and realistic mockups for promotional use. Perfect for authors, brands, and marketers.</p>
+                    </div>
+                    <div class="timeline-item pl-8">
+                        <h4 class="font-bold">Promotional Video Creation</h4>
+                        <p class="text-gray-600">Short, engaging videos to promote your book, product, or brand on digital platforms. Includes text animation, music, and storytelling elements.</p>
+                    </div>
+                    <div class="timeline-item pl-8">
+                        <h4 class="font-bold">Website Creation</h4>
+                        <p class="text-gray-600">Modern, user-friendly websites designed for authors, creatives, and small businesses. Fully responsive and tailored to your style.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Author -->
+    <section id="about" class="py-20 bg-gray-50 overflow-x-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-2/5 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+                    <img src="profile.jpg" alt="Rahul PR" class="rounded-lg shadow-xl w-full max-w-md mx-auto">
+                </div>
+                <div class="md:w-1/2" data-aos="fade-left" data-aos-duration="1000">
+                    <h2 class="section-heading text-3xl md:text-4xl font-bold mb-6">About Rahul PR</h2>
+                    <p class="text-gray-700 mb-6">I'm Rahul PR — a writer, artist, designer, web developer, video editor, and content creator based in Kochi, Kerala, India. I wear many creative hats, but storytelling is at the heart of everything I do.</p>
+                    <p class="text-gray-700 mb-6">I write across multiple genres including children’s stories, romance, fantasy, horror, psychological tales, educational content, and science fiction. My diverse background in elementary education helps me craft stories that are both meaningful and memorable.</p>
+                    <p class="text-gray-700 mb-6">Born and raised in Kerala, I bring cultural depth and imagination into each project I take on—whether it’s a beautifully illustrated kids’ book, a compelling promotional video, or a fully functional website. Beyond writing, I design book covers, create social media content, build websites, and run storytelling workshops to spark creativity in young minds and aspiring creators.</p>
+                    <div class="mt-8">
+                        <h3 class="font-bold text-xl mb-4">Connect with Rahul</h3>
+                        <div class="flex space-x-4">
+                            <a href="https://www.facebook.com/share/16CBSzNCYV/" class="text-gray-600 hover:text-primary transition">
+                                <i class="fab fa-facebook-f text-2xl"></i>
+                            </a>
+                            <a href="https://x.com/Devil_2815" class="text-gray-600 hover:text-primary transition">
+                                <i class="fab fa-twitter text-2xl"></i>
+                            </a>
+                            <a href="https://www.instagram.com/devi1_0666" class="text-gray-600 hover:text-primary transition">
+                                <i class="fab fa-instagram text-2xl"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/rahul-pr-334561226" class="text-gray-600 hover:text-primary transition">
+                                <i class="fab fa-linkedin text-2xl"></i>
+                            </a>
+                            <a href="mailto:dg.rahul.666@gmail.com" class="text-gray-600 hover:text-primary transition">
+                                <i class="fab fa-google text-2xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-20 bg-white overflow-x-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="section-heading text-3xl md:text-4xl font-bold mb-6">What Readers Say</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Hear from parents, teachers, and young readers who have enjoyed Rahul PR's books.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-50 rounded-lg p-8 shadow-md" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="text-gray-600 text-sm">4.5</span>
+                    </div>
+                    <p class="text-gray-700 mb-6">"Wow! Your book caught my eye. As a fellow author, I know the dedication it takes, this is amazing! Keep shining, and we'll all celebrate together!"</p>
+                    <div class="flex items-center">
+                        <div class="mr-4">
+                            <div class="bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center font-bold" style="background-color: var(--primary);">A</div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Caitlin Devlin</h4>
+                            <p class="text-gray-600 text-sm">Friend</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-20 bg-gray-50 overflow-x-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="section-heading text-3xl md:text-4xl font-bold mb-6">Get in Touch</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Have questions or want to arrange a book reading event? Reach out to Rahul PR directly.</p>
+            </div>
+            <div class="flex flex-col lg:flex-row">
+                <div class="lg:w-1/2 lg:pl-10" data-aos="fade-left" data-aos-duration="1000">
+                    <div class="bg-white rounded-lg shadow-lg p-8 h-full">
+                        <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="mr-4 text-primary" style="color: var(--primary);">
+                                    <i class="fas fa-envelope text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Email</h4>
+                                    <p class="text-gray-600">dg.rahul.666@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="mr-4 text-primary" style="color: var(--primary);">
+                                    <i class="fas fa-map-marker-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Location</h4>
+                                    <p class="text-gray-600">Kochi, Kerala, India</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="mr-4 text-primary" style="color: var(--primary);">
+                                    <i class="fas fa-book-reader text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Books Available On</h4>
+                                    <p class="text-gray-600">Amazon, Amazon Kindle, Google Play Books</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="mr-4 text-primary" style="color: var(--primary);">
+                                    <i class="fas fa-handshake text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">I Can Help</h4>
+                                    <p class="text-gray-600">Designing (Cover, Logo, and Post), Web Designing<br>Contact: ahulpravi14@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <h4 class="font-bold mb-4">Follow Rahul PR</h4>
+                            <div class="flex space-x-4">
+                                <a href="https://www.facebook.com/share/16CBSzNCYV/" class="bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center transition">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="https://x.com/Devil_2815" class="bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center transition">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="https://www.instagram.com/devi1_0666" class="bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center transition">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/in/rahul-pr-334561226" class="bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center transition">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-20 bg-primary text-white overflow-x-hidden" style="background-color: var(--primary);">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="max-w-4xl mx-auto text-center" data-aos="fade-up" data-aos-duration="1000">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">Join Rahul's Reader Club</h2>
+                <p class="text-xl opacity-90 mb-8">Subscribe to get updates on new book releases, exclusive content, and special offers.</p>
+                <form action="#" method="POST" class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-lg text-gray-800">
+                    <button type="submit" class="bg-accent text-white px-8 py-3 rounded-lg font-medium hover:bg-opacity-90 transition" style="background-color: var(--accent);">Subscribe</button>
+                </form>
+                <p class="text-sm opacity-80 mt-4">We respect your privacy. Unsubscribe at any time.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 overflow-x-hidden">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-8 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-4">Rahul PR</h3>
+                    <p class="text-gray-400 max-w-xs">I'm Rahul PR, a creative storyteller and designer from Kerala, crafting books, videos, and digital experiences across genres.</p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="https://www.facebook.com/share/16CBSzNCYV/" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://x.com/Devil_2815" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.instagram.com/devi1_0666" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/rahul-pr-334561226" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="mailto:dg.rahul.666@gmail.com" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-google"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="font-bold mb-4">Quick Links</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#home" class="text-gray-400 hover:text-white transition">Home</a></li>
+                            <li><a href="#books" class="text-gray-400 hover:text-white transition">Books</a></li>
+                            <li><a href="#upcoming" class="text-gray-400 hover:text-white transition">Upcoming</a></li>
+                            <li><a href="#about" class="text-gray-400 hover:text-white transition">About</a></li>
+                            <li><a href="#contact" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold mb-4">Books</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">The Legend of Vanchi</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Shadows Of The Mind</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">The Lost Pirate Treasure</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">The Phoenix Crown</a></li>
+                            <li><a href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3ARahul%2BPR&s=relevancerank&text=Rahul+PR&ref=dp_byline_sr_book_1" class="text-gray-400 hover:text-white transition">All Books</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold mb-4">Contact</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-start">
+                                <i class="fas fa-envelope text-gray-400 mt-1 mr-2"></i>
+                                <span class="text-gray-400">dg.rahul.666@gmail.com</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-gray-400 mt-1 mr-2"></i>
+                                <span class="text-gray-400">Kochi, Kerala, India</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">© 2023 Rahul PR. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition text-sm">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/917306078276" target="_blank" class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg z-50">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animation
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.remove('bg-opacity-95');
+                navbar.classList.add('bg-opacity-100');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.remove('bg-opacity-100');
+                navbar.classList.add('bg-opacity-95');
+            }
+        });
+    </script>
+</body>
+</html>
